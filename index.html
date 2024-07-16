@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="TR">
+<head>
+    <meta charset="UTF-8">
+    <title>Veri Gönder</title>
+    <script>
+        function sendData() {
+            const userInput = document.getElementById('user-input').value;
+
+            fetch('http://127.0.0.1:5000/run', {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Access-Control-Allow-Origin':'*'
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.output);  // Python çıktısını göster
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Python'a Veri Gönder</h1>
+    <input type="text" id="user-input" placeholder="Bir şey yazın">
+    <button onclick="sendData()">Gönder</button>
+</body>
+</html>
