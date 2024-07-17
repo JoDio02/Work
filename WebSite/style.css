@@ -7,18 +7,33 @@
     --incoming-chat-border: #444444; /* Border for incoming chat */
     --outgoing-chat-bg: #2e2e2e; /* Background for outgoing chat */
     --outgoing-chat-border: #555555; /* Border for outgoing chat */
+    --icon-color: #bbbbbb; /* Color for icons */
+    --placeholder-color: #888888; /* Placeholder text color */
 }
-
 
 body {
     background: var(--background-color);
     color: var(--text-color);
 }
 
-.chat-container{
+.chat-container {
     max-height: 100vh;
     padding-bottom: 150px;
     overflow-y: auto;
+}
+
+.chat-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+    background: var(--incoming-chat-bg);
+    border-radius: 25px;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+    background: #d3d3d3; /* Açık gri */
+    border-radius: 25px;
 }
 
 .chat-container .chat {
@@ -38,6 +53,9 @@ body {
     background: var(--incoming-chat-bg);
     border: 1px solid var(--incoming-chat-border);
 }
+
+/* Diğer stil tanımları devam ediyor... */
+
 
 .chat-content {
     display: flex;
@@ -217,3 +235,10 @@ span.material-symbols-rounded{
     background: darken(var(--link-color), 10%); /* Darker shade on hover */
 }
 
+body {
+    overflow: hidden; /* Tarayıcı kaydırma çubuğunu gizler */
+}
+
+.chat-container {
+    overflow-y: auto; /* İçerik alanının kaydırma çubuğunu gösterir */
+}

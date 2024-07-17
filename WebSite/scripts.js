@@ -1,18 +1,37 @@
 const chatInput = document.querySelector("#chat-input");
 const sendButton = document.querySelector("#send-btn");
 const chatContainer = document.querySelector(".chat-container");
+const deleteButton = document.querySelector("#delete-btn");
 
 const createElement = (html, className) => {
-    const chatDiv = document.createElement("div"); // Create a div element
+    const chatDiv = document.createElement("div");
     chatDiv.classList.add("chat", className);
     chatDiv.innerHTML = html;
     return chatDiv;
 };
 
-const getChatResponse = () =>{}
+const getChatResponse = (incomingChatDiv, userInput) => {
+    fetch('http://127.0.0.1:5000/run', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ input: userInput })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Yanıtı kullanarak UI güncelleme
+        const responseHtml = `<p>${data.output}</p>`;
+        incomingChatDiv.querySelector(".chat-details").insertAdjacentHTML('beforeend', responseHtml);
+        incomingChatDiv.querySelector(".typing-animation").remove(); // Typing animasyonunu kaldır
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+    });
+};
 
 const showTypingAnimation = () => {
-
     const html = `
         <div class="chat-content">
             <div class="chat-details">
@@ -23,18 +42,17 @@ const showTypingAnimation = () => {
                     <div class="typing-dot" style="--delay: 0.4s"></div>
                 </div>
             </div>
-            <span class="material-symbols-rounded">content_copy</span>
         </div>
     `;
-
-    const outgoingChatDiv = createElement(html, "incoming"); // Corrected spelling
-    chatContainer.appendChild(outgoingChatDiv);
-    getChatResponse()
-}
+    
+    const incomingChatDiv = createElement(html, "incoming");
+    chatContainer.appendChild(incomingChatDiv);
+    return incomingChatDiv; // `incomingChatDiv`'i döndür
+};
 
 const handleOutgoingChat = () => {
-    const userText = chatInput.value.trim(); // Get chat input and remove extra spaces
-    if (userText) { // Ensure there's text to send
+    const userText = chatInput.value.trim();
+    if (userText) {
         const html = `<div class="chat-content">
                         <div class="chat-details">
                             <img src="images/User.jpg" alt="user_img">
@@ -42,19 +60,26 @@ const handleOutgoingChat = () => {
                         </div>
                       </div>`;
         
-        const outgoingChatDiv = createElement(html, "outgoing"); // Corrected spelling
+        const outgoingChatDiv = createElement(html, "outgoing");
         chatContainer.appendChild(outgoingChatDiv);
         
         chatInput.value = ""; // Clear the input after sending
-        setTimeout(showTypingAnimation,500)
+        const incomingChatDiv = showTypingAnimation(); // Show typing animation and get reference
+        setTimeout(() => getChatResponse(incomingChatDiv, userText), 1000); // Wait for typing animation
     }
 };
 
+// Enter tuşuna basıldığında mesaj gönderme
 chatInput.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault(); // Prevents the newline in textarea
-        handleOutgoingChat(); // Call the function to send the message
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault(); // Prevent default behavior (i.e., adding a new line)
+        handleOutgoingChat();
     }
 });
 
 sendButton.addEventListener("click", handleOutgoingChat);
+
+// Sil butonuna tıklanıldığında sohbeti temizleme
+deleteButton.addEventListener("click", () => {
+    chatContainer.innerHTML = "";
+});
