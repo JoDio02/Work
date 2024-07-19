@@ -4,7 +4,7 @@ const chatContainer = document.querySelector(".chat-container");
 const deleteButton = document.querySelector("#delete-btn");
 
 const createElement = (html, className) => {
-    const chatDiv = document.createElement("div");
+    const chatDiv = document.createElement("div"); 
     chatDiv.classList.add("chat", className);
     chatDiv.innerHTML = html;
     return chatDiv;
@@ -79,7 +79,3 @@ chatInput.addEventListener("keypress", function(event) {
 
 sendButton.addEventListener("click", handleOutgoingChat);
 
-// Sil butonuna tıklanıldığında sohbeti temizleme
-deleteButton.addEventListener("click", () => {
-    chatContainer.innerHTML = "";
-});

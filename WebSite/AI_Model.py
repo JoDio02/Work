@@ -15,7 +15,7 @@ def run_script():
     user_input = data.get('input')
 
     # Model ile tahmin yapma
-    outputs = generator(user_input, max_length=50, num_return_sequences=1, no_repeat_ngram_size=2)
+    outputs = generator(user_input, max_length=70, num_return_sequences=1, no_repeat_ngram_size=2)
 
     # Çıktıyı elde etme
     output_text = outputs[0]['generated_text']
